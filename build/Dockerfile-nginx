@@ -1,4 +1,5 @@
-FROM composer:1.9 as composer
+ARG composer=latest
+FROM composer:${composer} as composer
 
 ARG version=dev-master
 ARG http_version=dev-master
@@ -14,6 +15,8 @@ RUN apk --no-cache add tzdata && \
     cp /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
     echo "UTC" | tee /etc/timezone && \
     apk del tzdata
+
+# https://pkgs.alpinelinux.org/packages?name=php*
 
 RUN apk --no-cache add \
     php7 php7-opcache php7-fpm php7-cgi php7-ctype php7-json php7-dom php7-zip php7-zip php7-gd \
