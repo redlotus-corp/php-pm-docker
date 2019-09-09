@@ -1,5 +1,5 @@
-VERSION?=dev-master
-HTTP_VERSION?=dev-master
+VERSION?=2.0
+HTTP_VERSION?=2.0.2
 TAG?=latest
 PREFIX?=phppm
 
