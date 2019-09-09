@@ -1,17 +1,19 @@
 VERSION?=2.0
 HTTP_VERSION?=2.0.2
 TAG?=latest
-PREFIX?=phppm
+TAG_MESSAGE?="Updated versions"
+PREFIX?=redlotuscorp
 
 # Determine this makefile's path.
 # Be sure to place this BEFORE `include` directives, if any.
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
 
 # example:
-# $ make VERSION=dev-master TAG=latest nginx
-# $ make PREFIX=redlotuscorp TAG=latest VERSION=2.0 HTTP_VERSION=2.0.2 nginx
-# $ make PREFIX=redlotuscorp TAG=latest VERSION=2.0 HTTP_VERSION=2.0.2 build-all
-# $ make PREFIX=redlotuscorp TAG=latest push-all
+# $ make VERSION=dev-master HTTP_VERSION=dev-master TAG=1.0.0 nginx
+# $ make PREFIX=redlotuscorp VERSION=2.0 HTTP_VERSION=2.0.2 TAG=1.0.0 nginx
+# $ make PREFIX=redlotuscorp VERSION=2.0 HTTP_VERSION=2.0.2 TAG=1.0.0 build-all
+# $ make PREFIX=redlotuscorp TAG=1.0.0 push-all
+# $ make PREFIX=redlotuscorp TAG=1.0.0 TAG_MESSAGE="PHP 7.3.9; Composer 1.9; PHP-PM 2.0; PHP-PM-HTTP 2.0.2" deliver
 
 # notes:
 # dev-master + dev-master incompatible in composer requirements
@@ -42,3 +44,10 @@ push-all:
 	docker push ${PREFIX}/ppm-nginx:${TAG}
 	docker push ${PREFIX}/ppm-standalone:${TAG}
 	docker push ${PREFIX}/ppm:${TAG}
+
+.PHONY: deliver
+deliver:
+	git tag -a v${TAG} -m "${TAG_MESSAGE}"
+	git push origin v${TAG}
+	@$(MAKE) -f $(THIS_FILE) PREFIX=${PREFIX} TAG=${TAG} build-all
+	@$(MAKE) -f $(THIS_FILE) PREFIX=${PREFIX} TAG=${TAG} push-all
