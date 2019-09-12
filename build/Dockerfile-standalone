@@ -29,6 +29,7 @@ RUN apk --no-cache add bash
 EXPOSE 8080
 
 COPY --from=composer /ppm /ppm
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
