@@ -1,6 +1,18 @@
 #!/bin/bash
 
-trapIt () { "$@"& pid="$!"; for SGNL in INT TERM CHLD USR1; do trap "kill -${SGNL} ${pid}" "$SGNL"; done; while kill -0 ${pid} > /dev/null 2>&1; do wait ${pid}; ec="$?"; done; exit ${ec}; };
+trapIt () {
+    "$@"& pid="$!";
+    echo "PID: $pid"
+    for SGNL in INT TERM CHLD USR1; do
+        trap "echo 'Sending signal ${SGNL} for pid ${pid}'; kill -${SGNL} ${pid}" "$SGNL";
+    done;
+    echo "Checking if pid ${pid} is still running"
+    while kill -0 ${pid} > /dev/null 2>&1; do
+        echo "Waiting ${pid} to exit..."
+        wait ${pid}; ec="$?";
+    done;
+    exit ${ec};
+};
 
 STATIC=/var/www/
 args=" $@ "
