@@ -48,7 +48,6 @@ push-all:
 
 .PHONY: deliver
 deliver:
-	git tag -a v${TAG} -m "${TAG_MESSAGE}"
-	git push origin v${TAG}
+	git tag -a v${TAG} -m "${TAG_MESSAGE}" && git push origin v${TAG} || true
 	@$(MAKE) -f $(THIS_FILE) PREFIX=${PREFIX} TAG=${TAG} build-all
 	@$(MAKE) -f $(THIS_FILE) PREFIX=${PREFIX} TAG=${TAG} push-all

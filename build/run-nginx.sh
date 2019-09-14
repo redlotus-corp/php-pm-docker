@@ -2,13 +2,14 @@
 
 trapIt () {
     "$@"& pid="$!";
+    echo "CMD: $@"
     echo "PID: $pid"
     for SGNL in INT TERM CHLD USR1; do
-        trap "echo 'Sending signal ${SGNL} for pid ${pid}'; kill -${SGNL} ${pid}" "$SGNL";
+        trap "ps ax; echo 'Trapped ${SGNL}. Sending signal ${SGNL} to PID ${pid}'; kill -${SGNL} ${pid} || true" "$SGNL";
     done;
     echo "Checking if pid ${pid} is still running"
     while kill -0 ${pid} > /dev/null 2>&1; do
-        echo "Waiting ${pid} to exit..."
+        echo "Waiting ${pid} to complete..."
         wait ${pid}; ec="$?";
     done;
     exit ${ec};
