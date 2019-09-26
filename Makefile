@@ -1,4 +1,4 @@
-VERSION?=2.0
+VERSION?=2.0.1
 HTTP_VERSION?=2.0.2
 TAG?=latest
 TAG_MESSAGE?="Updated versions"
@@ -48,6 +48,7 @@ push-all:
 
 .PHONY: deliver
 deliver:
+	git commit -am "Updated verions"
 	git tag -a v${TAG} -m "${TAG_MESSAGE}" && git push origin v${TAG} || true
 	@$(MAKE) -f $(THIS_FILE) PREFIX=${PREFIX} TAG=${TAG} build-all
 	@$(MAKE) -f $(THIS_FILE) PREFIX=${PREFIX} TAG=${TAG} push-all
