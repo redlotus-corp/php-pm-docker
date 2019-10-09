@@ -1,0 +1,14 @@
+{
+  "minimum-stability": "dev",
+  "require": {
+    "php-pm/php-pm": "dev-slave as 2.0.0",
+    "php-pm/httpkernel-adapter": "dev-master"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:andig/php-pm.git",
+      "no-api": true
+    }
+  ]
+}

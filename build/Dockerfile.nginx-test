@@ -1,10 +1,19 @@
+# syntax=docker/dockerfile:1.0.0-experimental
+
 ARG composer=latest
-FROM composer:${composer} as composer
+FROM composer:${composer} AS composer
 
-ARG version=dev-master
-ARG http_version=dev-master
+ADD etc/composer.json /ppm/composer.json
 
-RUN mkdir /ppm && cd /ppm && composer require php-pm/php-pm:${version} && composer require php-pm/httpkernel-adapter:${http_version}
+RUN mkdir -p ~/.ssh \
+    && ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+#    && yes y | ssh-keygen -q -t rsa -N "" -f ~/.ssh/id_rsa >/dev/null
+# && git clone --mirror 'git@github.com:andig/php-pm.git' \
+
+RUN --mount=type=ssh,id=github cd /ppm \
+    && composer config github-protocols ssh \
+    && composer -vvv install
 
 FROM alpine:3
 
@@ -19,7 +28,7 @@ RUN apk --no-cache add tzdata && \
 # https://pkgs.alpinelinux.org/packages?name=php*
 
 RUN apk --no-cache add \
-    php7 php7-opcache php7-fpm php7-cgi php7-ctype php7-json php7-dom php7-zip php7-zip php7-gd \
+    php7 php7-opcache php7-fpm php7-cgi php7-ctype php7-json php7-dom php7-zip php7-gd \
     php7-curl php7-mbstring php7-redis php7-mcrypt php7-iconv php7-posix php7-pdo_mysql php7-pdo_pgsql php7-pdo_sqlite php7-tokenizer php7-simplexml php7-session \
     php7-xml php7-sockets php7-openssl php7-fileinfo php7-ldap php7-exif php7-pcntl php7-xmlwriter php7-phar php7-zlib \
     php7-intl

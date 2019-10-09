@@ -1,5 +1,5 @@
 ARG composer=latest
-FROM composer:${composer} as composer
+FROM composer:${composer} AS composer
 
 ARG version=dev-master
 ARG http_version=dev-master
@@ -33,5 +33,5 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-ADD run-ppm.sh /etc/app/run.sh
-ENTRYPOINT ["/bin/sh", "/etc/app/run.sh"]
+ADD run-standalone.sh /etc/app/run.sh
+ENTRYPOINT ["/bin/bash", "/etc/app/run.sh"]
